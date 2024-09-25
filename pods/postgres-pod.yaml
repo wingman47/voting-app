@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres-pod
+  labels:
+    name: postgres-pod
+    app: demo-voting-app
+spec:
+  containers:
+    - name: postgres
+      image: postgres
+      ports:
+      # port number within the container where the application is running
+      # not exposed externally
+      # use a service like nodeport to expose it externally
+        - containerPort: 5432
+      # env will be used when worker and result app connects with postgres
+      env:
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+
+
+# example for nodeport -
+
+# apiversion: v1
+# kind: Service
+# metadata:    
+#   name: postgres-service
+# spec:    
+#   selector:        
+#     app: demo-voting-app    
+#   type: NodePort    
+#   ports:        
+#     - port: 5432         (port to communicate with the service internally)
+#       targetPort: 5432   (port of postgres)
+#       nodeport: 30007    (public port for any user)
